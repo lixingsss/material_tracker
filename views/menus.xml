@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action for Project -->
+    <record id="action_material_tracker_project" model="ir.actions.act_window">
+        <field name="name">项目列表</field>
+        <field name="res_model">material.tracker.project</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('parent_id', '=', False)]</field>
+    </record>
+
+    <!-- Action for Item (with search view) -->
+    <record id="action_material_tracker_item" model="ir.actions.act_window">
+        <field name="name">所有料号</field>
+        <field name="res_model">material.tracker.item</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="material_tracker.view_material_tracker_item_search"/>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Action for Import Wizard (standalone menu entry) -->
+    <record id="action_import_item_from_menu" model="ir.actions.act_window">
+        <field name="name">导入料号</field>
+        <field name="res_model">material.tracker.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Top Menu -->
+    <menuitem id="menu_material_tracker_root" name="来料跟踪" sequence="10"/>
+
+    <!-- Sub Menus -->
+    <menuitem id="menu_material_tracker_project" name="项目列表" parent="menu_material_tracker_root" action="action_material_tracker_project" sequence="10"/>
+    <menuitem id="menu_material_tracker_item" name="所有料号" parent="menu_material_tracker_root" action="action_material_tracker_item" sequence="20"/>
+    <menuitem id="menu_material_tracker_outsourced_item" name="所有外购件" parent="menu_material_tracker_root" action="action_material_tracker_outsourced_item" sequence="25"/>
+    <menuitem id="menu_material_tracker_drawing_root" name="图纸管理" parent="menu_material_tracker_root" action="action_material_tracker_drawing" sequence="30"/>
+    <menuitem id="menu_material_tracker_import" name="导入料号 (Excel)" parent="menu_material_tracker_root" action="action_import_item_from_menu" sequence="40"/>
+    <menuitem id="menu_material_tracker_import_outsourced" name="导入外购件 (Excel)" parent="menu_material_tracker_root" action="action_import_outsourced_wizard" sequence="50"/>
+
+    <!--
+    <menuitem id="menu_material_tracker_settings" name="设置" parent="menu_material_tracker_root" sequence="100"/>
+    <menuitem id="menu_material_tracker_state" name="状态设置" parent="menu_material_tracker_settings" action="action_material_tracker_state" sequence="10"/>
+    -->
+</odoo>

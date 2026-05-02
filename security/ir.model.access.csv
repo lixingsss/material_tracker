@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_material_tracker_project_user,material.tracker.project.user,model_material_tracker_project,base.group_user,1,1,1,1
+access_material_tracker_item_user,material.tracker.item.user,model_material_tracker_item,base.group_user,1,1,1,1
+access_material_tracker_state,material.tracker.state,model_material_tracker_state,base.group_user,1,1,1,1
+access_material_tracker_outsourced_item_user,material.tracker.outsourced.item.user,model_material_tracker_outsourced_item,base.group_user,1,1,1,1
+access_material_tracker_import_outsourced_wizard,material.tracker.import.outsourced.wizard,model_material_tracker_import_outsourced_wizard,base.group_user,1,1,1,1
+access_material_tracker_import_pdf_wizard,material.tracker.import.pdf.wizard,model_material_tracker_import_pdf_wizard,base.group_user,1,1,1,1
+access_material_tracker_drawing,material_tracker.drawing,model_material_tracker_drawing,base.group_user,1,1,1,1
+access_material_tracker_drawing_index,material_tracker.drawing.index,model_material_tracker_drawing_index,base.group_user,1,1,1,1

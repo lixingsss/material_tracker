@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_material_tracker_state_list" model="ir.ui.view">
+        <field name="name">material.tracker.state.list</field>
+        <field name="model">material.tracker.state</field>
+        <field name="arch" type="xml">
+            <list string="状态设置" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_material_tracker_state" model="ir.actions.act_window">
+        <field name="name">状态设置</field>
+        <field name="res_model">material.tracker.state</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

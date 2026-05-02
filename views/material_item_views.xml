@@ -1,0 +1,86 @@
+<odoo>
+    <!-- 服务器动作：供调用 -->
+    <record id="action_server_view_pdf" model="ir.actions.server">
+        <field name="name">查看图纸</field>
+        <field name="model_id" ref="material_tracker.model_material_tracker_item"/>
+        <field name="state">code</field>
+        <field name="code">
+item_id = env.context.get('active_id') or env.context.get('id')
+if item_id:
+    record = env['material.tracker.item'].browse(item_id)
+if record:
+    action = record.action_view_pdf()
+        </field>
+    </record>
+
+    <!-- 列表视图 (极简版) -->
+    <record id="view_material_tracker_item_list" model="ir.ui.view">
+        <field name="name">material.tracker.item.list</field>
+        <field name="model">material.tracker.item</field>
+        <field name="arch" type="xml">
+            <list string="料号列表">
+                <field name="is_done" widget="boolean_toggle"/>
+<!-- 列表视图中的按钮 -->
+<button name="action_view_pdf" type="object" icon="fa-search-plus" title="检索图纸"/>
+                <field name="sku_code"/>
+                <field name="material"/>
+                <field name="process_requirement"/>
+                <field name="qty"/>
+                <field name="due_date"/>
+                <field name="pdf_attachment_id" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- 表单视图 -->
+    <record id="view_material_tracker_item_form" model="ir.ui.view">
+        <field name="name">material.tracker.item.form</field>
+        <field name="model">material.tracker.item</field>
+        <field name="arch" type="xml">
+            <form string="料号">
+                <header>
+<!-- 表单视图 header 中的按钮 -->
+<button name="action_view_pdf" string="在图纸库中检索图纸" type="object" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar" options="{'size': [400, 400]}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="sku_code" placeholder="输入料号..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="qty"/>
+                            <field name="due_date"/>
+                        </group>
+                        <group>
+                            <field name="material"/>
+                            <field name="process_requirement"/>
+                            <field name="is_done" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group string="其他信息">
+                        <field name="remark"/>
+                        <field name="order_person"/>
+                        <field name="pdf_attachment_id"/>
+                        <field name="pdf_page_num"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- 搜索视图 -->
+    <record id="view_material_tracker_item_search" model="ir.ui.view">
+        <field name="name">material.tracker.item.search</field>
+        <field name="model">material.tracker.item</field>
+        <field name="arch" type="xml">
+            <search string="搜索料号">
+                <field name="sku_code" string="料号"/>
+                <field name="material" string="材料"/>
+            </search>
+        </field>
+    </record>
+</odoo>

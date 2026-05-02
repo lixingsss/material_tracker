@@ -1,0 +1,2 @@
+pymupdf>=1.24.0
+pymupdf-fonts>=1.0.5

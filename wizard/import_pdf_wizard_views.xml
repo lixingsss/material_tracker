@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_import_pdf_global" model="ir.actions.act_window">
+        <field name="name">一键匹配所有图纸</field>
+        <field name="res_model">material.tracker.import.pdf.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_project_id': False}</field>
+    </record>
+
+    <record id="view_import_pdf_wizard_form" model="ir.ui.view">
+        <field name="name">material.tracker.import.pdf.wizard.form</field>
+        <field name="model">material.tracker.import.pdf.wizard</field>
+        <field name="arch" type="xml">
+            <form string="导入图纸 PDF">
+                <sheet>
+                    <group>
+                        <field name="project_id" readonly="1"/>
+                        <field name="match_threshold" widget="float"/>
+                        <field name="attachment_ids" widget="many2many_binary" string="上传 PDF 文件"/>
+                    </group>
+                    <p class="text-muted">
+                        提示：系统将根据文件名自动匹配项目下的料号。支持模糊匹配，匹配度低于设定阈值的文件将提示手动检查。
+                    </p>
+                </sheet>
+                <footer>
+                    <button name="action_import" string="开始匹配并导入" type="object" class="btn-primary"/>
+                    <button string="取消" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_import_pdf_wizard" model="ir.actions.act_window">
+        <field name="name">导入图纸 PDF</field>
+        <field name="res_model">material.tracker.import.pdf.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- 专用预览视图 (沉浸模式) -->
+    <record id="view_import_pdf_wizard_viewer" model="ir.ui.view">
+        <field name="name">material.tracker.import.pdf.wizard.viewer</field>
+        <field name="model">material.tracker.import.pdf.wizard</field>
+        <field name="arch" type="xml">
+            <form string="图纸" create="0" edit="0" delete="0">
+                <field name="pdf_file" widget="pdf_viewer" readonly="1" nolabel="1"/>
+            </form>
+        </field>
+    </record>
+
+    <!-- 特殊的 PDF 查看视图 (保留以备他用) -->
+    <record id="view_attachment_pdf_viewer" model="ir.ui.view">
+        <field name="name">ir.attachment.pdf.viewer</field>
+        <field name="model">ir.attachment</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <form string="查看图纸">
+                <field name="datas" widget="pdf_viewer" readonly="1"/>
+            </form>
+        </field>
+    </record>
+</odoo>

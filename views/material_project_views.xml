@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 列表视图 -->
+    <record id="view_material_tracker_project_tree" model="ir.ui.view">
+        <field name="name">material.tracker.project.tree</field>
+        <field name="model">material.tracker.project</field>
+        <field name="arch" type="xml">
+            <list string="项目" decoration-success="progress_rate == 100" decoration-warning="progress_rate &lt; 100 and progress_rate &gt; 0 and parent_id" decoration-muted="not parent_id">
+                <header>
+                    <button name="%(material_tracker.action_import_pdf_global)d" 
+                            string="一键匹配所有图纸" 
+                            type="action" 
+                            class="btn-primary"/>
+                </header>
+                <field name="parent_id" string="大项目" optional="show"/>
+                <field name="name" string="项目名称" decoration-bf="1"/>
+                <field name="description" string="描述" optional="hide"/>
+                <field name="total_item_count" string="总料号数" optional="show" sum="Total"/>
+                <field name="arrived_item_count" string="已完成数" optional="show" sum="Arrived"/>
+                <field name="progress_rate" string="进度" widget="progressbar" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- 看板视图 -->
+    <record id="view_material_tracker_project_kanban" model="ir.ui.view">
+        <field name="name">material.tracker.project.kanban</field>
+        <field name="model">material.tracker.project</field>
+        <field name="arch" type="xml">
+            <kanban string="项目看板">
+                <field name="name"/>
+                <field name="parent_id"/>
+                <field name="description"/>
+                <field name="total_item_count"/>
+                <field name="arrived_item_count"/>
+                <field name="progress_rate"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_body mt-2">
+                                <div t-if="record.parent_id.raw_value" class="text-muted small">
+                                    <i class="fa fa-folder-open"/> <field name="parent_id"/>
+                                </div>
+                                <div t-if="record.description.raw_value" class="text-muted">
+                                    <field name="description"/>
+                                </div>
+                                <div class="mt-2">
+                                    <span>进度: <field name="arrived_item_count"/> / <field name="total_item_count"/></span>
+                                    <field name="progress_rate" widget="progressbar"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-name="menu">
+                        <a type="delete">删除</a>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- 表单视图 -->
+    <record id="view_material_tracker_project_form" model="ir.ui.view">
+        <field name="name">material.tracker.project.form</field>
+        <field name="model">material.tracker.project</field>
+        <field name="arch" type="xml">
+            <form string="项目">
+                <header>
+                    <button string="↩ 返回上级" name="action_go_back" type="object"
+                            class="btn-secondary" invisible="not parent_id"/>
+                    <button string="🏠 主页" name="action_go_home" type="object"
+                            class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- 大项目显示子项目数量按钮 -->
+                        <button name="action_view_children" type="object" class="oe_stat_button" icon="fa-folder-open" invisible="parent_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="child_count"/></span>
+                                <span class="o_stat_text">子项目</span>
+                            </div>
+                        </button>
+                        <!-- 子项目显示料号数量按钮 -->
+                        <button name="action_view_items" type="object" class="oe_stat_button" icon="fa-list" invisible="not parent_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="arrived_item_count"/> / <field name="total_item_count"/>
+                                </span>
+                                <span class="o_stat_text">全部料号</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="parent_id" invisible="not parent_id" string="大项目"/>
+                        <h2 invisible="not parent_id"><field name="parent_id" placeholder="选择所属大项目..."/></h2>
+                        <h1>
+                            <field name="name" placeholder="项目名称..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <notebook>
+                        <!-- 大项目：显示子项目汇总列表 -->
+                        <page string="子项目" invisible="parent_id">
+                            <field name="child_ids">
+                                <list string="子项目" create="0" edit="0" delete="0" no_open="1" decoration-success="progress_rate == 100" decoration-warning="progress_rate &lt; 100 and progress_rate &gt; 0">
+                                    <field name="project_url_html" string="子项目名称" widget="html" class="text-wrap"/>
+                                    <field name="total_item_count" string="总料号数"/>
+                                    <field name="arrived_item_count" string="已完成数"/>
+                                    <field name="progress_rate" string="进度" widget="progressbar"/>
+                                </list>
+                            </field>
+                        </page>
+                        <!-- 子项目：显示料号明细 Tab -->
+                        <page string="料号明细" invisible="not parent_id">
+                            <group>
+                                <field name="show_series_rep_only" widget="boolean_toggle" force_save="1"/>
+                                <field name="hide_common_prefix" widget="boolean_toggle" force_save="1"/>
+                            </group>
+                            <div invisible="not hide_common_prefix" class="alert alert-info" role="alert">
+                                <i class="fa fa-info-circle"/> 已隐藏公共前缀：<field name="common_sku_prefix" readonly="1" nolabel="1"/>
+                            </div>
+                            <!-- 显示所有料号（包含非代表件） -->
+                            <field name="item_ids" invisible="show_series_rep_only">
+                                <list editable="bottom" multi_edit="1" limit="9999" decoration-info="pdf_attachment_id != False">
+                                    <field name="is_done" widget="boolean_toggle"/>
+<button name="action_view_pdf" type="object" icon="fa-search-plus" 
+        title="在图纸库中检索并查看" class="btn-link"/>
+                                    <field name="sku_code" string="料号" readonly="1"/>
+                                    <field name="material" readonly="1" optional="show"/>
+                                    <field name="process_requirement" readonly="1" optional="show"/>
+                                    <field name="qty" readonly="1" optional="show"/>
+                                    <field name="due_date" readonly="1" optional="show"/>
+                                    <field name="order_person" readonly="1" optional="hide"/>
+                                    <field name="remark" readonly="1" optional="hide"/>
+                                    <field name="state_modified_by" optional="hide"/>
+                                    <field name="state_modified_date" optional="hide"/>
+                                    <field name="image" widget="image" options="{'size': [50, 50]}" optional="show"/>
+                                    <field name="pdf_attachment_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <!-- 只显示代表件 -->
+                            <field name="item_ids_main" invisible="not show_series_rep_only">
+                                <list editable="bottom" multi_edit="1" limit="9999" decoration-info="pdf_attachment_id != False">
+                                    <field name="is_done" widget="boolean_toggle"/>
+<button name="action_view_pdf" type="object" icon="fa-search-plus" 
+        title="在图纸库中检索并查看" class="btn-link"/>
+                                    <field name="sku_code" string="料号" readonly="1"/>
+                                    <field name="material" readonly="1" optional="show"/>
+                                    <field name="process_requirement" readonly="1" optional="show"/>
+                                    <field name="qty" readonly="1" optional="show"/>
+                                    <field name="due_date" readonly="1" optional="show"/>
+                                    <field name="order_person" readonly="1" optional="hide"/>
+                                    <field name="remark" readonly="1" optional="hide"/>
+                                    <field name="state_modified_by" optional="hide"/>
+                                    <field name="state_modified_date" optional="hide"/>
+                                    <field name="image" widget="image" options="{'size': [50, 50]}" optional="show"/>
+                                    <field name="pdf_attachment_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="外购件" invisible="not parent_id">
+                            <header>
+                                <button name="%(material_tracker.action_import_outsourced_wizard)d" 
+                                        string="批量导入外购件" 
+                                        type="action" 
+                                        class="btn-primary mb-2"
+                                        context="{'default_project_id': id}"/>
+                            </header>
+                            <field name="outsourced_item_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="qty"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

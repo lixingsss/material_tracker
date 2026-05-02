@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_material_tracker_outsourced_item_tree" model="ir.ui.view">
+        <field name="name">material.tracker.outsourced.item.tree</field>
+        <field name="model">material.tracker.outsourced.item</field>
+        <field name="arch" type="xml">
+            <list string="外购件" editable="bottom">
+                <field name="name"/>
+                <field name="qty"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_material_tracker_outsourced_item_form" model="ir.ui.view">
+        <field name="name">material.tracker.outsourced.item.form</field>
+        <field name="model">material.tracker.outsourced.item</field>
+        <field name="arch" type="xml">
+            <form string="外购件">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="qty"/>
+                        <field name="project_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_material_tracker_outsourced_item" model="ir.actions.act_window">
+        <field name="name">外购件</field>
+        <field name="res_model">material.tracker.outsourced.item</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

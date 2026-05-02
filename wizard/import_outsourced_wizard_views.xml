@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_import_outsourced_wizard_form" model="ir.ui.view">
+        <field name="name">material.tracker.import.outsourced.wizard.form</field>
+        <field name="model">material.tracker.import.outsourced.wizard</field>
+        <field name="arch" type="xml">
+            <form string="导入外购件">
+                <group>
+                    <field name="project_id" readonly="1"/>
+                    <field name="attachment_ids" widget="many2many_binary" string="上传 Excel 文件"/>
+                </group>
+                <footer>
+                    <button name="action_import" string="开始导入" type="object" class="btn-primary"/>
+                    <button string="取消" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_import_outsourced_wizard" model="ir.actions.act_window">
+        <field name="name">导入外购件</field>
+        <field name="res_model">material.tracker.import.outsourced.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

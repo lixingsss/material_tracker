@@ -1,0 +1,84 @@
+/* --- 核心：通过子元素状态控制父级 Modal 容器 --- */
+
+/* 当弹窗内包含 .o_pdf_preview_full_modal 时，强制外层对话框全屏 */
+.modal:has(.o_pdf_preview_full_modal) .modal-dialog {
+    max-width: 100% !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* 强制弹窗内容区无边框、无圆角、背景统一 */
+.modal:has(.o_pdf_preview_full_modal) .modal-content {
+    height: 100vh !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: #525659 !important; /* PDF.js 默认深灰色 */
+}
+
+/* 彻底隐藏弹窗标题栏和页脚 */
+.modal:has(.o_pdf_preview_full_modal) .modal-header,
+.modal:has(.o_pdf_preview_full_modal) .modal-footer {
+    display: none !important;
+}
+
+/* 移除主体内边距 */
+.modal:has(.o_pdf_preview_full_modal) .modal-body {
+    padding: 0 !important;
+    background: #525659 !important;
+}
+
+/* --- 内部 Form 视图处理 --- */
+.o_pdf_preview_full_modal {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.o_pdf_preview_full_modal .o_form_sheet_bg,
+.o_pdf_preview_full_modal .o_form_sheet {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* --- PDF 查看器：隐藏自带工具栏 --- */
+.o_pdf_preview_full_modal .o_field_pdf_viewer {
+    width: 100vw !important;
+    height: 100vh !important;
+}
+
+.o_pdf_preview_full_modal iframe {
+    width: 100vw !important;
+    height: calc(100vh + 42px) !important; /* 增加高度以抵消位移 */
+    margin-top: -42px !important; /* 向上推，隐藏 PDF 内部工具栏 */
+    border: none !important;
+}
+
+/* --- 右上角浮动关闭按钮 --- */
+.o_btn_close_floating {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    z-index: 99999 !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    color: white !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    font-size: 24px !important;
+    line-height: 36px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5) !important;
+}
+
+.o_btn_close_floating:hover {
+    background: #e74c3c !important;
+    transform: scale(1.1);
+}
